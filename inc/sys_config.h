@@ -30,13 +30,16 @@
 #ifndef __SYS_CONFIG_H_
 #define __SYS_CONFIG_H_
 
-/* Pick only one. Build for LPC11UXX family */
+/* Pick only one. Build for LPC11UXX family (see Makefile)*/
 // #define CHIP_LPC110X
 // #define CHIP_LPC11XXLV
 // #define CHIP_LPC1125
 // #define CHIP_LPC11AXX
 // #define CHIP_LPC11CXX
 // #define CHIP_LPC11EXX
+
+#ifndef CHIP_LPC11UXX
 #define CHIP_LPC11UXX
+#endif
 
 #endif /* __SYS_CONFIG_H_ */
