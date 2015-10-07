@@ -24,6 +24,27 @@
 #ifndef __CORE_CMINSTR_H
 #define __CORE_CMINSTR_H
 
+#if   defined ( __CC_ARM )
+	#ifndef __ASM
+		#define __ASM            __asm
+	#endif
+	#ifndef __INLINE
+		#define __INLINE         __inline
+	#endif
+	#ifndef __STATIC_INLINE
+	  #define __STATIC_INLINE  static __inline
+	#endif
+#else
+	#ifndef __ASM
+		#define __ASM            __asm
+	#endif
+	#ifndef __INLINE
+		#define __INLINE         inline
+	#endif
+	#ifndef __STATIC_INLINE
+	  #define __STATIC_INLINE  static inline
+	#endif
+#endif
 
 /* ##########################  Core Instruction Access  ######################### */
 /** \defgroup CMSIS_Core_InstructionInterface CMSIS Core Instruction Interface
