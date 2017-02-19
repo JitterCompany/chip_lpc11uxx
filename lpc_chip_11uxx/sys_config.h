@@ -37,9 +37,7 @@
 // #define CHIP_LPC11AXX
 // #define CHIP_LPC11CXX
 // #define CHIP_LPC11EXX
+// #define CHIP_LPC11UXX
 
-#ifndef CHIP_LPC11UXX
-#define CHIP_LPC11UXX
-#endif
 
 #endif /* __SYS_CONFIG_H_ */
