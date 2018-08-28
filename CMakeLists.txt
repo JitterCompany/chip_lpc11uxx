@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5.0 FATAL_ERROR)
 
 
-set(CPM_MODULE_NAME lpc_chip_11uxx)
+set(CPM_MODULE_NAME chip_lpc11uxx)
 
 #-----------------------------------------------------------------------
 # Required CPM Setup - no need to modify - See: https://github.com/iauns/cpm
@@ -38,10 +38,10 @@ CPM_InitModule(${CPM_MODULE_NAME})
 #-----------------------------------------------------------------------
 
 file(GLOB SOURCES 
-    "lpc_chip_11uxx/src/*.c"
+    "chip_lpc11uxx/src/*.c"
     )
-include_directories("lpc_chip_11uxx")
-CPM_ExportAdditionalIncludeDir("lpc_chip_11uxx")
+include_directories("chip_lpc11uxx")
+CPM_ExportAdditionalIncludeDir("chip_lpc11uxx")
 
 add_library(${CPM_LIB_TARGET_NAME} ${SOURCES})
 target_link_libraries(${CPM_LIB_TARGET_NAME} ${CPM_LIBRARIES})
