@@ -239,6 +239,7 @@ extern const uint32_t ExtRateIn;
 #include "wwdt_11xx.h"
 #include "ssp_11xx.h"
 #include "romapi_11xx.h"
+#include "iap_11xx.h"
 
 #if !defined(CHIP_LPC1125)
 /* All LPC1xx devices except the LPC1125 */
