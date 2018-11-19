@@ -33,6 +33,7 @@
 #define __ROMAPI_11XX_H_
 
 #include "error.h"
+#include  <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -60,9 +61,9 @@ typedef struct {
 /**
  * @brief LPC11XX IAP_ENTRY API function type
  */
-typedef void (*IAP_ENTRY_T)(unsigned int[], unsigned int[]);
+typedef void (*IAP_ENTRY_T)(uint32_t[], uint32_t[]);
 
-static INLINE void iap_entry(unsigned int cmd_param[], unsigned int status_result[])
+static INLINE void iap_entry(uint32_t cmd_param[], uint32_t status_result[])
 {
 	((IAP_ENTRY_T) IAP_ENTRY_LOCATION)(cmd_param, status_result);
 }
