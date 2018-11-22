@@ -36,9 +36,6 @@
 
 #define IAP_CMD_ERASE_PAGE                59    //new
 
-/* IAP boot ROM location and access function */
-#define IAP_ROM_LOCATION				0x1FFF1FF1UL
-
 /*****************************************************************************
 ** Function name:	Chip_IAP_PrepareSectors
 **
@@ -298,15 +295,11 @@ uint32_t Chip_IAP_ReadUID(uint32_t * UID)
 	command[0] = IAP_CMD_READ_UID;
 
 	iap_entry(command, result);
-//	*UID++ =  result[1];
-//	*UID++ =  result[2];
-//	*UID++ =  result[3];
-//	*UID =  result[4];
-
-	*UID =  result[1];
+	*UID++ =  result[1];
 	*UID++ =  result[2];
 	*UID++ =  result[3];
-	*UID++ =  result[4];
+	*UID =  result[4];
+// TODO: verify
 
 	return result[0];
 

@@ -26,7 +26,15 @@
 
 #include "error.h"
 #include "usbd.h"
-#include "app_usbd_cfg.h"
+
+
+#if !defined(CHIP_LPC11UXX_USBD_CONFIG_FILE)
+  #error "no config file declared"
+#else
+#include CHIP_LPC11UXX_USBD_CONFIG_FILE
+#endif
+
+
 
 /** \file
  *  \brief ROM API for USB device stack.

@@ -37,11 +37,13 @@ CPM_InitModule(${CPM_MODULE_NAME})
 # Project sources / settings
 #-----------------------------------------------------------------------
 
-file(GLOB SOURCES 
-    "chip_lpc11xxx/src/*.c"
-    )
+file(GLOB SOURCES
+"chip_lpc11xxx/src/*.c"
+)
 include_directories("chip_lpc11xxx")
+include_directories("chip_lpc11xxx/usbd")
 CPM_ExportAdditionalIncludeDir("chip_lpc11xxx")
+CPM_ExportAdditionalIncludeDir("chip_lpc11xxx/usbd")
 
 add_library(${CPM_LIB_TARGET_NAME} ${SOURCES})
 target_link_libraries(${CPM_LIB_TARGET_NAME} ${CPM_LIBRARIES})
