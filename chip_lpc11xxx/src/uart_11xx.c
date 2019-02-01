@@ -226,56 +226,71 @@ void Chip_UART_IRQRBHandler(LPC_USART_T *pUART, RINGBUFF_T *pRXRB, RINGBUFF_T *p
 	Chip_UART_RXIntHandlerRB(pUART, pRXRB);
 }
 
-/* Determines and sets best dividers to get a target baud rate */
-uint32_t Chip_UART_SetBaudFDR(LPC_USART_T *pUART, uint32_t baudrate)
 
+/**
+ * Determines and sets best dividers to get a target baud rate
+ *
+ * Implementation is copied from LPC43xx series chip library,
+ * as the original version did not work correctly.
+ */
+uint32_t Chip_UART_SetBaudFDR(LPC_USART_T *pUART, uint32_t baud)
 {
-	uint32_t uClk;
-    uint32_t dval, mval;
-    uint32_t dl;
-    uint32_t rate16 = 16 * baudrate;
-	uint32_t actualRate = 0;
+	uint32_t sdiv = 0, sm = 1, sd = 0;
+	uint32_t pclk, m, d;
+	uint32_t odiff = -1UL; /* old best diff */
 
-	/* Get Clock rate */
-	uClk = Chip_Clock_GetMainClockRate();
+	// get the clock rate (this line was adapted to fit the lpc11xx series)
+	pclk = Chip_Clock_GetMainClockRate();
 
-    /* The fractional is calculated as (PCLK  % (16 * Baudrate)) / (16 * Baudrate)
-     * Let's make it to be the ratio DivVal / MulVal
-     */
-	dval = uClk % rate16;
+	/* Loop through all possible fractional divider values */
+	for (m = 1; odiff && m < 16; m++) {
+		for (d = 0; d < m; d++) {
+			uint32_t diff, div;
+			uint64_t dval = (((uint64_t) pclk << 28) * m) / (baud * (m + d));
 
-   /* The PCLK / (16 * Baudrate) is fractional
-    * => dval = pclk % rate16
-    * mval = rate16;
-    * now mormalize the ratio
-    * dval / mval = 1 / new_mval
-    * new_mval = mval / dval
-    * new_dval = 1
-    */
-    if (dval > 0) {
-        mval = rate16 / dval;
-        dval = 1;
+			/* Lower 32-bit of dval has diff */
+			diff = (uint32_t) dval;
+			/* Upper 32-bit of dval has div */
+			div = (uint32_t) (dval >> 32);
 
-        /* In case mval still bigger then 4 bits
-        * no adjustment require
-        */
-        if (mval > 12) {
-         dval = 0;
-      }
-    }
-    dval &= 0xf;
-    mval &= 0xf;
-    dl = uClk / (rate16 + rate16 *dval / mval);
+			/* Closer to next div */
+			if ((int)diff < 0) {
+				diff = -diff;
+				div ++;
+			}
 
-    /* Update UART registers */
-    Chip_UART_EnableDivisorAccess(pUART);
-	Chip_UART_SetDivisorLatches(pUART, UART_LOAD_DLL(dl), UART_LOAD_DLM(dl));
+			/* Check if new value is worse than old or out of range */
+			if (odiff < diff || !div || (div >> 16) || (div < 3 && d)) {
+				continue;
+			}
+
+			/* Store the new better values */
+			sdiv = div;
+			sd = d;
+			sm = m;
+			odiff = diff;
+
+			/* On perfect match, break loop */
+			if(!diff) {
+				break;
+			}
+		}
+	}
+
+	/* Return 0 if a vaild divisor is not possible */
+	if (!sdiv) {
+		return 0;
+	}
+
+	/* Update UART registers */
+	Chip_UART_EnableDivisorAccess(pUART);
+	Chip_UART_SetDivisorLatches(pUART, UART_LOAD_DLL(sdiv), UART_LOAD_DLM(sdiv));
 	Chip_UART_DisableDivisorAccess(pUART);
 
 	/* Set best fractional divider */
-	pUART->FDR = (UART_FDR_MULVAL(mval) | UART_FDR_DIVADDVAL(dval));
+	pUART->FDR = (UART_FDR_MULVAL(sm) | UART_FDR_DIVADDVAL(sd));
 
 	/* Return actual baud rate */
-	actualRate = uClk / (16 * dl + 16 * dl * dval / mval);
-	return actualRate;
+	return (pclk >> 4) * sm / (sdiv * (sm + sd));
 }
+
