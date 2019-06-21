@@ -65,7 +65,7 @@ typedef enum CHIP_IOCON_PIO {
 	IOCON_PIO0_7 = (0x050 >> 2),
 	IOCON_PIO0_8 = (0x060 >> 2),
 	IOCON_PIO0_9 = (0x064 >> 2),
-	IOCON_PIO0_10 = (0x070 >> 2),
+	IOCON_PIO0_10 = (0x068 >> 2),
 	IOCON_PIO0_11 = (0x074 >> 2),
 
 	IOCON_PIO1_0 = (0x078 >> 2),
@@ -127,7 +127,7 @@ typedef enum CHIP_IOCON_PIN_LOC {
 	IOCON_RILOC_PIO2_3          = (0xBC),		/*!< Selects RI function in pin location PIO2_3 */
 	IOCON_RILOC_PIO3_3          = (0xBC | 1),	/*!< Selects Ri function in pin location PIO3_3 */
 
-#if defined(CHIP_LPC1125)
+#if !defined(CHIP_LPC1125)
 	IOCON_SSEL1_LOC_PIO2_2      = (0x18),		/*!< Selects SSEL1 function in pin location PIO2_2 */
 	IOCON_SSEL1_LOC_PIO2_4      = (0x18 | 1),	/*!< Selects SSEL1 function in pin location PIO2_4 */
 	
@@ -141,14 +141,39 @@ typedef enum CHIP_IOCON_PIN_LOC {
     IOCON_MISO1_LOC_PIO1_10     = (0xC8 | 1),	/*!< Selects MISO1 function in pin location PIO1_10 */
     
     IOCON_MOSI1_LOC_PIO2_3      = (0xCC),		/*!< Selects MOSI1 function in pin location PIO2_3 */
-    IOCON_MOSI1_LOC_PIO1_9      = (0xCC),		/*!< Selects MOSI1 function in pin location PIO1_9 */
+    IOCON_MOSI1_LOC_PIO1_9      = (0xCC | 1),	/*!< Selects MOSI1 function in pin location PIO1_9 */
     
     IOCON_CT326B0_CAP0_LOC_PIO1_5 = (0xD0),		/*!< Selects CT32B0_CAP0 function in pin location PIO1_5 */
     IOCON_CT326B0_CAP0_LOC_PIO2_9 = (0xD0 | 1),	/*!< Selects CT32B0_CAP0 function in pin location PIO2_9 */
     
     IOCON_U0_RXD_LOC_PIO1_6     = (0xD4),		/*!< Selects U0 RXD function in pin location PIO1_6 */
     IOCON_U0_RXD_LOC_PIO2_7     = (0xD4 | 1),   /*!< Selects U0 RXD function in pin location PIO2_7 */
+    IOCON_U0_RXD_LOC_PIO3_1     = (0xD4 | 2),   /*!< Selects U0 RXD function in pin location PIO3_1 */
     IOCON_U0_RXD_LOC_PIO3_4     = (0xD4 | 3),   /*!< Selects U0 RXD function in pin location PIO3_4 */
+
+// These registers are in a different position on the LPC112X
+#else
+	IOCON_SSEL1_LOC_PIO2_2      = (0xCC),		/*!< Selects SSEL1 function in pin location PIO2_2 */
+	IOCON_SSEL1_LOC_PIO2_4      = (0xCC | 1),	/*!< Selects SSEL1 function in pin location PIO2_4 */
+	
+    IOCON_CT16B0_CAP0_LOC_PIO0_2 = (0xD0),		/*!< Selects SSEL1 CTB16B0_CAP0 function in pin location PIO0_2 */
+    IOCON_CT16B0_CAP0_LOC_PIO3_3 = (0xD0 | 1),	/*!< Selects SSEL1 CTB16B0_CAP0 function in pin location PIO3_3 */
+    
+    IOCON_SCK1_LOC_PIO2_1       = (0xD4),		/*!< Selects SCK1 function in pin location PIO2_1 */
+    IOCON_SCK1_LOC_PIO3_2       = (0xD4 | 1),	/*!< Selects SCK1 function in pin location PIO3_2 */
+    
+    IOCON_MISO1_LOC_PIO2_2      = (0xD8),		/*!< Selects MISO1 function in pin location PIO2_2 */
+    IOCON_MISO1_LOC_PIO1_10     = (0xD8 | 1),	/*!< Selects MISO1 function in pin location PIO1_10 */
+    
+    IOCON_MOSI1_LOC_PIO2_3      = (0xDC),		/*!< Selects MOSI1 function in pin location PIO2_3 */
+    IOCON_MOSI1_LOC_PIO1_9      = (0xDC | 1),	/*!< Selects MOSI1 function in pin location PIO1_9 */
+    
+    IOCON_CT326B0_CAP0_LOC_PIO1_5 = (0xE0),		/*!< Selects CT32B0_CAP0 function in pin location PIO1_5 */
+    IOCON_CT326B0_CAP0_LOC_PIO2_9 = (0xE0 | 1),	/*!< Selects CT32B0_CAP0 function in pin location PIO2_9 */
+    
+    IOCON_U0_RXD_LOC_PIO1_6     = (0xE4),		/*!< Selects U0 RXD function in pin location PIO1_6 */
+    IOCON_U0_RXD_LOC_PIO2_7     = (0xE4 | 1),   /*!< Selects U0 RXD function in pin location PIO2_7 */
+    IOCON_U0_RXD_LOC_PIO3_4     = (0xE4 | 3),   /*!< Selects U0 RXD function in pin location PIO3_4 */
 #endif
 
 } CHIP_IOCON_PIN_LOC_T;
