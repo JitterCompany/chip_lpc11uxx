@@ -484,6 +484,17 @@ int Chip_I2C_IsMasterActive(I2C_ID_T id)
 /* State change handler for master transfer */
 void Chip_I2C_MasterStateHandler(I2C_ID_T id)
 {
+    if (!i2c[id].mXfer) {
+        // Sometimes (e.g., when I2C is blocked intermittently)
+        // something (e.g., Chip_I2C_MasterTransfer())
+        // clears i2c[id].mXfer. In this case don't call
+        // handleMasterXferState() as it dereferences mXfer
+        // and this leads to a hard fault.
+        i2c[id].ip->CONCLR = I2C_CON_SI; // clear interrupt bit to stop isr from being called repeatedly
+        i2c[id].ip->CONSET = I2C_CON_STO; // force stop
+        return;
+    }
+
 	if (!handleMasterXferState(i2c[id].ip, i2c[id].mXfer)) {
 		i2c[id].mEvent(id, I2C_EVENT_DONE);
 	}
