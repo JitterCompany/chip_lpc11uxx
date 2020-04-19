@@ -427,7 +427,11 @@ int Chip_I2C_MasterTransfer(I2C_ID_T id, I2C_XFER_T *xfer)
 	iic->mXfer = 0;
 
 	/* Wait for stop condition to appear on bus */
-	while (!isI2CBusFree(iic->ip)) {}
+	while (!isI2CBusFree(iic->ip)) {
+        if(xfer->status == I2C_STATUS_BUSERR) {
+            break;
+        }
+    }
 
 	/* Start slave if one is active */
 	if (SLAVE_ACTIVE(iic)) {
@@ -547,6 +551,12 @@ void Chip_I2C_SlaveStateHandler(I2C_ID_T id)
 		}
 		iic->sEvent(id, (I2C_EVENT_T) ret);
 	}
+}
+
+
+void Chip_I2C_ForceStop(I2C_ID_T id)
+{
+    i2c[id].ip->CONSET = I2C_CON_STO; // force stop
 }
 
 /* Disable I2C device */

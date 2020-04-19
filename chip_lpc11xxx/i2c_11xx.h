@@ -530,6 +530,11 @@ void Chip_I2C_SlaveStateHandler(I2C_ID_T id);
  */
 int Chip_I2C_IsStateChanged(I2C_ID_T id);
 
+/**
+ * Force stop the I2C transaction (e.g. on timeout)
+ */
+void Chip_I2C_ForceStop(I2C_ID_T id);
+
 #endif /* !defined(CHIP_LPC110X) */
 
 /**
